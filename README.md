@@ -4,17 +4,19 @@ A quick-reference command for Claude Code beginners. Type `help_claude` in any t
 
 ## Install
 
-**One-liner** (copy & paste into terminal):
+**Paste this single line into your terminal:**
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/JPMasters-AUS/help_claude_cheatsheet/main/install.sh | bash
 ```
 
-**Or manually:**
+That's it. Open a new terminal tab and type `help_claude` to confirm it worked.
+
+**Alternative — clone and install manually:**
 
 ```bash
 git clone https://github.com/JPMasters-AUS/help_claude_cheatsheet.git
-cd help-claude-cheatsheet
+cd help_claude_cheatsheet
 bash install.sh
 ```
 
