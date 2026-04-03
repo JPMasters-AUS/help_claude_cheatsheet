@@ -1,0 +1,141 @@
+#!/bin/bash
+# Claude Code Terminal Cheat Sheet
+# Run: help_claude [section]
+# Examples: help_claude, help_claude start, help_claude resume, help_claude keys
+
+BOLD='\033[1m'
+DIM='\033[2m'
+CYAN='\033[36m'
+YELLOW='\033[33m'
+GREEN='\033[32m'
+RESET='\033[0m'
+
+section="${1:-all}"
+
+header() { echo -e "\n${BOLD}${CYAN}═══ $1 ═══${RESET}\n"; }
+cmd()    { printf "  ${GREEN}%-38s${RESET} %s\n" "$1" "$2"; }
+note()   { echo -e "  ${DIM}$1${RESET}"; }
+
+show_start() {
+  header "STARTING CLAUDE CODE"
+  cmd "claude"                        "Start interactive session in current folder"
+  cmd "claude \"do something\""       "Start with a task"
+  cmd "claude -p \"quick question\""  "Ask a question, get answer, exit"
+  cmd "claude -n \"my-feature\""      "Start a named session (easy to resume)"
+  cmd "claude --model opus"           "Use a specific model (opus/sonnet/haiku)"
+  cmd "claude --effort high"          "Set reasoning depth (low/medium/high/max)"
+  cmd "claude --add-dir ../other"     "Give access to additional directories"
+  echo ""
+  cmd "claude auth login"             "Sign in to your account"
+  cmd "claude auth status"            "Check login status"
+  cmd "claude --version"              "Check installed version"
+}
+
+show_resume() {
+  header "RESUMING PREVIOUS WORK"
+  cmd "claude -c"                     "Continue most recent session (this folder)"
+  cmd "claude -r"                     "Browse & pick from all sessions"
+  cmd "claude --resume \"name\""      "Resume a specific named session"
+  echo ""
+  note "Tip: Always name sessions with  claude -n \"feature-name\""
+  note "     so you can find them later with  claude --resume"
+  echo ""
+  header "SESSION PICKER KEYS (when using claude -r)"
+  cmd "Up/Down"                       "Navigate sessions"
+  cmd "Enter"                         "Resume selected session"
+  cmd "P"                             "Preview session content"
+  cmd "R"                             "Rename a session"
+  cmd "/"                             "Search/filter sessions"
+  cmd "A"                             "Toggle current dir vs all projects"
+  cmd "Esc"                           "Exit picker"
+}
+
+show_slash() {
+  header "SLASH COMMANDS (type these inside Claude Code)"
+  echo -e "  ${DIM}Type / to see all commands, or start typing to filter${RESET}\n"
+  cmd "/help"                         "Show available commands"
+  cmd "/clear"                        "Clear conversation history"
+  cmd "/resume"                       "Switch to a different session"
+  cmd "/rename new-name"              "Rename current session"
+  cmd "/model"                        "Switch Claude model"
+  cmd "/config"                       "Adjust settings (theme, model, etc.)"
+  cmd "/cost"                         "See token usage for this session"
+  cmd "/memory"                       "View/edit project memory"
+  cmd "/simplify"                     "Review code for quality"
+  cmd "/exit"                         "Quit Claude Code"
+  echo ""
+  header "QUICK PREFIXES"
+  cmd "! command"                     "Run shell command directly (e.g. ! npm test)"
+  cmd "@filename"                     "Reference a file (e.g. @src/app.js)"
+}
+
+show_keys() {
+  header "KEYBOARD SHORTCUTS (inside Claude Code)"
+  cmd "?"                             "Show all shortcuts"
+  cmd "Ctrl+C"                        "Cancel current input / stop generation"
+  cmd "Ctrl+D"                        "Exit Claude Code"
+  cmd "Shift+Tab"                     "Cycle permission modes"
+  cmd "Ctrl+R"                        "Search through input history"
+  cmd "Ctrl+O"                        "Toggle verbose output (see reasoning)"
+  cmd "Ctrl+L"                        "Redraw / clear the screen"
+  cmd "Esc Esc"                       "Rewind to a previous state"
+  cmd "Option+P  (Mac)"               "Switch model mid-session"
+  cmd "Option+T  (Mac)"               "Toggle extended thinking"
+  echo ""
+  header "MULTILINE INPUT"
+  cmd "Shift+Enter"                   "New line (WezTerm, iTerm2, Ghostty)"
+  cmd "Option+Enter"                  "New line (macOS default)"
+  cmd "Backslash + Enter"             "New line (works everywhere)"
+}
+
+show_permissions() {
+  header "PERMISSION MODES (press Shift+Tab to cycle)"
+  cmd "Default"                       "Asks before each edit (safest)"
+  cmd "Plan"                          "Read-only analysis, asks before changes"
+  cmd "Auto"                          "Approves most safe actions automatically"
+  echo ""
+  note "Start in a specific mode: claude --permission-mode plan"
+}
+
+show_tips() {
+  header "TIPS FOR BEGINNERS"
+  echo -e "  ${YELLOW}1.${RESET} Navigate to your project folder first:  ${GREEN}cd /path/to/project${RESET}"
+  echo -e "  ${YELLOW}2.${RESET} Name your sessions:  ${GREEN}claude -n \"feature-name\"${RESET}"
+  echo -e "  ${YELLOW}3.${RESET} Be specific: \"fix the login bug\" > \"fix the bug\""
+  echo -e "  ${YELLOW}4.${RESET} Let Claude explore first: \"explain how auth works\""
+  echo -e "  ${YELLOW}5.${RESET} Press ${GREEN}?${RESET} anytime to see keyboard shortcuts"
+  echo -e "  ${YELLOW}6.${RESET} Use ${GREEN}! command${RESET} to run shell commands without Claude"
+  echo -e "  ${YELLOW}7.${RESET} Check usage with ${GREEN}/cost${RESET}"
+  echo -e "  ${YELLOW}8.${RESET} Press ${GREEN}Ctrl+O${RESET} to see Claude's reasoning"
+}
+
+show_all() {
+  echo -e "${BOLD}${CYAN}"
+  echo "  ╔═══════════════════════════════════════════╗"
+  echo "  ║     CLAUDE CODE — TERMINAL CHEAT SHEET    ║"
+  echo "  ╚═══════════════════════════════════════════╝"
+  echo -e "${RESET}"
+  echo -e "  ${DIM}Sections: start | resume | slash | keys | permissions | tips${RESET}"
+  echo -e "  ${DIM}Usage:    help_claude [section]   e.g. help_claude resume${RESET}"
+  show_start
+  show_resume
+  show_slash
+  show_keys
+  show_permissions
+  show_tips
+  echo ""
+}
+
+case "$section" in
+  start|launch)       show_start ;;
+  resume|continue)    show_resume ;;
+  slash|commands)      show_slash ;;
+  keys|shortcuts)      show_keys ;;
+  perm*)              show_permissions ;;
+  tips|beginner)      show_tips ;;
+  all|"")             show_all ;;
+  *)
+    echo -e "Unknown section: $section"
+    echo -e "Available: ${GREEN}start${RESET} | ${GREEN}resume${RESET} | ${GREEN}slash${RESET} | ${GREEN}keys${RESET} | ${GREEN}permissions${RESET} | ${GREEN}tips${RESET}"
+    ;;
+esac
